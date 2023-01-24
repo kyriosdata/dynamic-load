@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LoaderTest {
@@ -21,6 +21,8 @@ public class LoaderTest {
         tmpDir = System.getProperty("java.io.tmpdir");
         copyToTmp("x.jar", tmpDir);
         copyToTmp("y.zip", tmpDir);
+        copyToTmp("servico.zip", tmpDir);
+        copyToTmp("teste.zip", tmpDir);
     }
 
     private void copyToTmp(String name, String dir) throws IOException {
@@ -42,5 +44,23 @@ public class LoaderTest {
         Path jar = Paths.get(tmpDir, "y.zip");
         Function<String,String> function = (Function) Loader.get(jar, "Teste");
         assertEquals("Y", function.apply("y"));
+    }
+
+    @Test
+    public void pathArquivoNaoPodeSerNull() {
+        assertThrows(NullPointerException.class, () -> Loader.get(null));
+    }
+
+    @Test
+    public void classeInvalidaOuNaoImplementadaGeraExcecao() {
+        assertThrows(LoaderException.class, () -> Loader.get("c:/temp/servico.zip"));
+    }
+
+    @Test
+    public void forneceApenasArquivo() throws Exception{
+        Path jar = Paths.get(tmpDir, "teste.zip");
+        String path = jar.toString();
+        Function<String,String> function = (Function) Loader.get(path);
+        assertEquals("TESTE", function.apply("teste"));
     }
 }
