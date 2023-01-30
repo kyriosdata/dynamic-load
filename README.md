@@ -34,3 +34,7 @@ construção da instância. Noutras palavras:
 # Orientações gerais
 
 No diretório **loader** está o projeto que implementa a funcionalidade de carga dinâmica de arquivo JAR/ZIP.
+
+# Outras referências
+
+- [Compiling and Executing Code from a String in Java](https://www.baeldung.com/java-string-compile-execute-code)
